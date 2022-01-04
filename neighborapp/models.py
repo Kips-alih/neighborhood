@@ -6,21 +6,27 @@ from django.dispatch import receiver
 
 # Create your models here.
 
-class Location(models.Model):
+class Neighborhood(models.Model):
     name = models.CharField(max_length=50)
-    created_at = models.DateTimeField(auto_now_add=True)
+    occupants = models.IntegerField(default=0)
+    admin = models.ForeignKey(User, on_delete=models.CASCADE)
+    location = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now_add=True, null=True)
 
-    def save_location(self):
+    def create_neigborhood(self):
         self.save()
 
-    def __str__(self):
-        return self.name
-
+    
 class Profile(models.Model):
+    name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=100, blank=True, null=True)
     profile_pic = CloudinaryField('image')
     bio = models.TextField(max_length=300,null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    location=models.CharField(max_length=50,null=True)
+    location = models.CharField(max_length=50,null=True)
+    neighborhood = models.ForeignKey(Neighborhood, on_delete=models.CASCADE)
+
 
 
 
@@ -41,3 +47,18 @@ class Profile(models.Model):
         self.delete()
     
 
+class Business(models.Model):
+    name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50)
+    description = models.TextField(blank=True, null=True)
+    neighbourhood = models.ForeignKey(Neighborhood, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    # create business
+    def create_business(self):
+        self.save()
+
+    def __str__(self):
+        return self.name

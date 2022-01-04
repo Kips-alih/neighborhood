@@ -1,6 +1,6 @@
 from django.contrib import admin
-from neighborapp.models import Profile,Location
+from neighborapp.models import Profile,Neighborhood
 
 # Register your models here.
 admin.site.register(Profile)
-admin.site.register(Location)
+admin.site.register(Neighborhood)

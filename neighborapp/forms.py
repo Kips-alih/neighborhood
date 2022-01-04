@@ -6,7 +6,7 @@ from .models import Profile
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['bio','profile_pic','location']
+        fields = ['name','email','bio','profile_pic','location']
         widgets = {
             'bio': Textarea(attrs={'cols': 30, 'rows': 3}),
         }
