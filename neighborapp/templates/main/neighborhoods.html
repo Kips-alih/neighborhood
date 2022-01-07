@@ -1,0 +1,50 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<style>
+    .card-img-top {
+        width: 100%;
+        height: 15vw !important;
+        object-fit: cover;
+    }
+
+   
+</style>
+<section >
+    <div class="container mt-5">
+
+        <div class="row mt-4">
+
+            <h2 class="text-center mb-5 headings">Neighborhoods</h2>
+
+            {% for neighbor in neighborhood %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card mb-4 post-card">
+                    <img src="{{ neighbor.image.url }}" class="card-img-top" alt="Personal">
+                    
+                    <div class="card-body">
+                      <a href="{%url 'single_hood' neighbor.name %}"><p class="name">Name: {{neighbor.name}}</p></a>
+                            <div class="d-flex justify-content-between location-date">
+                                <div>
+                                    <p class="text-uppercase badge rounded-pill bg-warning text-dark text-capitalize">{{ post.location }}</p>
+                                </div>
+                                <div>
+                                    <p>{{ neighbor.created_at|date }}</p>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2">
+                                <div class="display-on-hover">
+                                    <p class="badge rounded-pill bg-danger text-white text-capitalize">
+                                        {{ neighbor.description}}
+                                    </p>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+{% endblock %}

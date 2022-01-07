@@ -1,0 +1,29 @@
+{% extends "main/base.html" %}
+{% block content %}
+<style>
+    .image{
+        height: auto;
+        width: 100%;
+    }
+    .hood{
+        margin-top: 5%;
+    }
+</style>
+<div class="container hood">
+      <div class="hoods">
+          <div class="row">
+            <div class="col-md-6">
+                <img src="{{hood.image.url}}"class="image">
+            </div>
+            <div class="col-md-6">
+                <p>Neighborhood Name: {{hood.name}}</p>
+                <p>Neighborhood Description: {{hood.description}}</p>
+                <p>Neighborhood Occupants: {{hood.occupants}}</p>
+                <p>Neighborhood Location: {{ hood.location }}</p>
+                <p>Date Created: {{ hood.created_at|date }}</p>
+                <p>Date Updated: {{ hood.updated_at|date}}</p>
+            </div>
+          </div>
+    </div>
+</div>
+{% endblock %}
