@@ -5,5 +5,15 @@ from . import views
 urlpatterns=[
     path('',views.index,name = 'index'),
     path('profile/', views.profile, name='profile'),
+    path('new_neighbor',views.new_neighbor, name= 'new_neighbor'),
+    path('neighborhood/', views.neighborhood, name = 'neighborhood'),
+    path('hood/<str:name>',views.single_hood,name='single_hood'),
+    path("business/create/", views.create_business, name="create_business"), # create business
+    path('business/', views.business, name = 'business'),
+    path('search/', views.search, name='search_results'),
+    path('post/new-post', views.create_post, name='post'),
+
+    
+
 
 ]
