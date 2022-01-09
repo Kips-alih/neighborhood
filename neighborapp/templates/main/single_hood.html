@@ -2,28 +2,96 @@
 {% block content %}
 <style>
     .image{
-        height: auto;
+        height:  25vw !important;
         width: 100%;
+        margin-top: 20px;
     }
     .hood{
         margin-top: 5%;
     }
+    .card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.title {
+  color: grey;
+  font-size: 18px;
+}
+
+.business{
+  border-radius: 50%;
+}
+.join{
+    background-color: rgb(248, 189, 79,0.8);
+    }
+
+button:hover, a:hover {
+  opacity: 0.7;
+}
 </style>
 <div class="container hood">
       <div class="hoods">
-          <div class="row">
-            <div class="col-md-6">
+          <div class="row card">
+            <div id="neighbor" class="col-md-6">
                 <img src="{{hood.image.url}}"class="image">
             </div>
             <div class="col-md-6">
-                <p>Neighborhood Name: {{hood.name}}</p>
-                <p>Neighborhood Description: {{hood.description}}</p>
-                <p>Neighborhood Occupants: {{hood.occupants}}</p>
-                <p>Neighborhood Location: {{ hood.location }}</p>
-                <p>Date Created: {{ hood.created_at|date }}</p>
-                <p>Date Updated: {{ hood.updated_at|date}}</p>
+                <p><strong>Neighborhood Name:</strong> {{hood.name}}</p>
+                <p><strong>Neighborhood Administrator:</strong> {{hood.area_administrator}}</p>
+                <p><strong>Neighborhood Description: </strong>{{hood.description}}</p>
+                <p><strong>Neighborhood Occupants: </strong>{{hood.neighbors.count}} Member{{hood.neighbors.count|pluralize}}</p>
+                <p><strong>Neighborhood Location: </strong>{{ hood.location }}</p>
+                <p><strong>Neighborhood Health Facility contacts:</strong> {{hood.health_tell}}</p>
+                <p><strong>Neighborhood Police Post Contacts:</strong> {{hood.police_tell}}</p>
+                <p><strong>Date Created: </strong>{{ hood.created_at|date }}</p>
+                <p><strong>Date Updated:</strong> {{ hood.updated_at|date}}</p>
             </div>
           </div>
     </div>
 </div>
+<div class="container mt-5">
+    <div class="row mt-4">
+        <h2 class="text-center mb-5 headings">    <a href="{% url 'create_business'%}" class="btn newbiz join font-weight-bol btn-sm mb-2 "><i class="fas fa-plus"></i>New Business</a>
+          Businesses Within Your Neighborhood: <br>{{neighbourhood}}</h2>
+
+        {% for business in businesses %}
+        <div class="col-md-6 col-lg-3">
+            <div class="card" >
+                <div class="card-body">
+                    <img class="business" src="{{ business.image.url }}" alt="post" style="width:150px">
+                    <h5 class="card-title text-capitalize"><span class="badge rounded-pill bg-info text-white">Business Name: {{ business.name }}</span></h5>
+                    <p>Description: {{business.description}}</p>
+                    <h6 class="card-subtitle mb-2 text-muted">Owner: <span class="badge rounded-pill bg-info text-white">{{ business.user.username }}</span></h6>
+                    <p>Email: <a href="malto:{{ business.email }}" class="card-link"><span class="text-bold text-primary">{{ business.email }}</span> </a></p>
+                   <br>
+                </div>
+              </div>
+        </div>
+
+        {% empty %}
+        <div class="col-md-12">
+            <div class="card mb-4 post-card">
+                <div class="card-body text-center">
+                    <h6 class="fade-item mb-2 text-danger">No businesses found within your Neighborhood!!</h6>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+</div>
+<div class="container">
+  <div>
+    <h3 class="text-center mt-3 orange">Posts</h3>
+    <a href="{% url 'create_post'%}" class="btn join  font-weight-bol btn-sm mb-2 "><i class="fas fa-plus"></i>New Post</a>
+    {% for post in posts%}
+    <div class="post-hold mb-2">
+      <h6><strong>{{post.title}}</strong></h6>
+      <p>{{post.content}}</p>
+      <p class="text-center "><small class="text-muted">--By {{post.user|title}} on {{post.date}}--</small></p> 
+    <hr>
+    </div>
+    {%endfor%}
+</div>
+  </div>
 {% endblock %}

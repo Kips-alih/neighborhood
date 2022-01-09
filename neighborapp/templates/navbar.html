@@ -16,12 +16,9 @@
         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Account<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="{%url 'profile'%}"><span class="glyphicon glyphicon-user"></span>Profile</a></li>
-            <li><a href="{% url 'create_business'%}">Add Business</a></li>
-            <li><a href="{% url 'post'%}">Add Post</a></li>
             <li><a href="/logout">Logout</a></li>
           </ul>
         </li>
-        <li class="active"><a href="{%url 'business'%}">Businesses</a></li>
 
       </ul>
       <form class="navbar-form navbar-left" role="search" action="{% url 'search_results'%}">
