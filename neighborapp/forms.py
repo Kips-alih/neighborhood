@@ -14,7 +14,7 @@ class ProfileForm(forms.ModelForm):
 class NeighborhoodForm(forms.ModelForm):
     class Meta:
         model = Neighborhood
-        fields = ['name', 'image','description','occupants','location']
+        fields = ['name', 'image','description','area_administrator','location','health_tell','police_tell']
         widgets = {
             'description': Textarea(attrs={'cols' : 20, 'rows' : 3}),
         }
@@ -22,7 +22,7 @@ class NeighborhoodForm(forms.ModelForm):
 class BusinessForm(forms.ModelForm):
     class Meta:
         model = Business
-        fields = ['name', 'email','description']
+        fields = ['name','image','neighborhood','email','description']
         widgets = {
             'description': Textarea(attrs={'cols' : 20, 'rows' : 3}),
         }
@@ -30,4 +30,4 @@ class BusinessForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ('user', 'neighborhood')
+        exclude = ('user', 'location')
