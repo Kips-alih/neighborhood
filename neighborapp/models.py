@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=50)
@@ -31,6 +32,9 @@ class Neighborhood(models.Model):
     occupants = models.IntegerField(default=0)
     location = models.ForeignKey(Location, on_delete=models.CASCADE,null=True)
     admin = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    health_tell = models.IntegerField(null=True, blank=True)
+    police_tell = models.IntegerField(null=True, blank=True)
+    area_administrator = models.CharField(max_length=100,null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now_add=True, null=True)
 
@@ -65,9 +69,10 @@ class Profile(models.Model):
     bio = models.TextField(max_length=300,null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE,null=True)
-    neighborhood = models.ForeignKey(Neighborhood, on_delete=models.CASCADE,null=True)
+    neighborhood = models.ForeignKey(Neighborhood, on_delete=models.CASCADE,related_name='neighbors',null=True)
 
-
+    def str(self):
+        return f'{self.user.username} profile'
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
@@ -88,6 +93,7 @@ class Profile(models.Model):
 
 class Business(models.Model):
     name = models.CharField(max_length=50)
+    image=CloudinaryField('image',null=True)
     email = models.EmailField(max_length=50)
     description = models.TextField(blank=True, null=True)
     neighborhood = models.ForeignKey(Neighborhood, on_delete=models.CASCADE,null=True)
@@ -119,9 +125,9 @@ class Post(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     content = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='post_owner')
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
-    neighborhood = models.ForeignKey(Neighborhood, on_delete=models.CASCADE, related_name='hood_post')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE,null=True)
+    neighborhood = models.ForeignKey(Neighborhood, on_delete=models.CASCADE, related_name='hood_post',null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def create_post(self):
