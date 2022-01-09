@@ -104,7 +104,7 @@ def search(request):
 
 @login_required(login_url="/accounts/login/")
 def create_post(request):
-    current_user = request.user.profile
+    current_user = request.user
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -112,13 +112,13 @@ def create_post(request):
             post.user = current_user
             post.save()
 
-        return HttpResponseRedirect('/post')
+        return HttpResponseRedirect('/neighborhood')
     else:
         form = PostForm()
     return render(request, "main/create_post.html", {'form':form})
 
-@login_required(login_url="/accounts/login/")
-def post(request):
-    current_user = request.user
-    post = Post.objects.all().order_by('-id')
-    return render(request, 'main/posts.html', {'posts': post})
+# @login_required(login_url="/accounts/login/")
+# def post(request):
+#     current_user = request.user
+#     post = Post.objects.all().order_by('-id')
+#     return render(request, 'main/posts.html', {'posts': post})

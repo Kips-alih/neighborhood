@@ -14,7 +14,7 @@ urlpatterns=[
     path('business/', views.business, name = 'business'),
     path('search/', views.search, name='search_results'),
     path('post/new-post', views.create_post, name='create_post'),
-    path('post/', views.post, name = 'post'),
+    # path('post/', views.post, name = 'post'),
 
 
     
