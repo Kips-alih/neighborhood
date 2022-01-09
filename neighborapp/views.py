@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
@@ -7,8 +7,9 @@ from .forms import BusinessForm, ProfileForm, NeighborhoodForm,PostForm
 
 # Create your views here.
 def index(request):
-
-    return render(request, 'main/index.html')
+    
+    posts = Post.objects.all().order_by("-id")
+    return render(request, 'main/index.html', {'posts': posts})
 
 
 @login_required(login_url='/accounts/login/')
@@ -36,7 +37,7 @@ def new_neighbor(request):
             neighbor = form.save(commit=False)
             neighbor.user = current_user
             neighbor.save()
-        return HttpResponseRedirect('/profile')
+        return HttpResponseRedirect('/neighborhood')
     else:
         form = NeighborhoodForm()
     return render(request, 'main/create_neighbor.html',{'form':form})
@@ -49,7 +50,24 @@ def neighborhood(request):
 @login_required(login_url='/accounts/login/')
 def single_hood(request,name):
     hood = Neighborhood.objects.get(name=name)
-    return render(request,'main/single_hood.html',{'hood':hood})
+    business = Business.objects.filter(neighborhood=hood)
+    post = Post.objects.filter(neighborhood=hood)
+
+
+    return render(request,'main/single_hood.html',{'hood':hood,'businesses':business,'posts':post})
+
+def join_hood(request,id):
+    neighborhood = get_object_or_404(Neighborhood, id=id)
+    
+    request.user.profile.neighborhood = neighborhood
+    request.user.profile.save()
+    return redirect('neighborhood')
+
+def leave_hood(request, id):
+    hood = get_object_or_404(Neighborhood, id=id)
+    request.user.profile.neighborhood = None
+    request.user.profile.save()
+    return redirect('neighborhood')
 
 @login_required(login_url="/accounts/login/")
 def create_business(request):
@@ -60,7 +78,7 @@ def create_business(request):
             business = form.save(commit=False)
             business.user = current_user
             business.save()
-        return HttpResponseRedirect('/business')
+        return HttpResponseRedirect('/neighborhood')
     else:
         form = BusinessForm()
     return render(request, "main/add_business.html", {'form':form})
@@ -83,8 +101,10 @@ def search(request):
         message = 'Not found'
     return render(request, 'main/search.html', {'message': message})
 
+
+@login_required(login_url="/accounts/login/")
 def create_post(request):
-    current_user = request.user
+    current_user = request.user.profile
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -92,7 +112,13 @@ def create_post(request):
             post.user = current_user
             post.save()
 
-        return redirect("main/index.html", {"posts": post})
+        return HttpResponseRedirect('/post')
     else:
         form = PostForm()
-    return render(request, "main/post.html", {'form':form})
+    return render(request, "main/create_post.html", {'form':form})
+
+@login_required(login_url="/accounts/login/")
+def post(request):
+    current_user = request.user
+    post = Post.objects.all().order_by('-id')
+    return render(request, 'main/posts.html', {'posts': post})
